@@ -12,7 +12,9 @@ app.get('/test', (req, res) => {
     }
   });
 });
-
+app.get('/resp', (req, res) => {
+  res.send(`hello: 11111111111`);
+});
 app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
 });
