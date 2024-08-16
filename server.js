@@ -1,18 +1,18 @@
 const express = require('express');
-const { exec } = require('child_process');
+const { runBot } = require('./bot'); 
 
 const app = express();
 
-app.get('/run-test', (req, res) => {
-  exec('npx mocha cita2.spec.js', (error, stdout, stderr) => {
-    if (error) {
-      res.send(`Error: ${stderr}`);
-    } else {
-      res.send(`Test Output: ${stdout}`);
-    }
-  });
+app.get('/run-bot', async (req, res) => {
+  try {
+    await runBot();
+    res.send('Bot executed successfully.');
+  } catch (error) {
+    res.status(500).send(`Error executing bot: ${error.message}`);
+  }
 });
 
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

@@ -1,33 +1,20 @@
-const { Builder, By, Key, until } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 
-describe('cita 2', function() {
-  this.timeout(30000);
-  let driver;
-  let vars;
-  
-  beforeEach(async function() {
-    const options = new chrome.Options();
-    options.addArguments('headless'); // Run in headless mode
-    options.addArguments('no-sandbox'); // Required for some server environments
-    options.addArguments('disable-dev-shm-usage'); // Overcome limited resource problems
-    driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
-    vars = {};
-  });
-  
-  it('cita 2', async function() {
-    await driver.get("https://icp.administracionelectronica.gob.es/icpplus/index.html");
+async function runBot() {
+  const options = new chrome.Options();
+  options.addArguments('headless'); // Run in headless mode
+  options.addArguments('no-sandbox'); // Required for some server environments
+  options.addArguments('disable-dev-shm-usage'); // Overcome limited resource problems
+
+  let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
+  try {
+    await driver.get('https://icp.administracionelectronica.gob.es/icpplus/index.html');
     await driver.manage().window().setRect({ width: 1550, height: 878 });
-
-    // Wait for the form element to be located
-    await driver.wait(until.elementLocated(By.id("form")), 10000);
-    await driver.findElement(By.id("form")).click();
-
-    const dropdown = await driver.findElement(By.id("form"));
+    await driver.findElement(By.id('form')).click();
+    const dropdown = await driver.findElement(By.id('form'));
     await dropdown.findElement(By.xpath("//option[. = 'Barcelona']")).click();
-
-    await driver.findElement(By.id("btnAceptar")).click();
-    
+    await driver.findElement(By.id('btnAceptar')).click();
     await driver.findElement(By.id("tramiteGrupo[0]")).click()
     {
       const dropdown = await driver.findElement(By.id("tramiteGrupo[0]"))
@@ -58,5 +45,8 @@ describe('cita 2', function() {
     await driver.findElement(By.id("btnConfirmar")).click()
 
     assert.strictEqual(await driver.switchTo().alert().getText(), "AVISO CITA PREVIA\n\nNo olvides introducir el dato: '\"Código\"'. ");
-  });
-});
+  } finally {
+    await driver.quit();
+  }
+}
+module.exports = { runBot };
