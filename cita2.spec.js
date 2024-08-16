@@ -1,5 +1,5 @@
-const { Builder, By, until } = require('selenium-webdriver');
-const assert = require('assert');
+const { Builder, By, Key, until } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 
 describe('cita 2', function() {
   this.timeout(30000);
@@ -7,14 +7,13 @@ describe('cita 2', function() {
   let vars;
   
   beforeEach(async function() {
-    driver = await new Builder().forBrowser('chrome').build();
+    const options = new chrome.Options();
+    options.addArguments('headless'); // Run in headless mode
+    options.addArguments('no-sandbox'); // Required for some server environments
+    options.addArguments('disable-dev-shm-usage'); // Overcome limited resource problems
+    driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
     vars = {};
   });
-  
-  // Remove the afterEach block to prevent automatic browser closure
-  // afterEach(async function() {
-  //   await driver.quit();
-  // });
   
   it('cita 2', async function() {
     await driver.get("https://icp.administracionelectronica.gob.es/icpplus/index.html");
