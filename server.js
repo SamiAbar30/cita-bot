@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 const app = express();
 
 app.get('/test', (req, res) => {
-  exec('npx mocha cita2.spec.js', (error, stdout, stderr) => {
+  exec('npx mocha cita3.spec.js', (error, stdout, stderr) => {
     if (error) {
       res.send(`Error: ${stderr}`);
     } else {
