@@ -1,5 +1,5 @@
 const express = require('express');
-const { exec } = require('child_process');
+const { runBot } = require('./bot'); 
 
 const app = express();
 
@@ -12,9 +12,8 @@ app.get('/test', (req, res) => {
     }
   });
 });
-app.get('/resp', (req, res) => {
-  res.send(`hello: 11111111111`);
-});
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
