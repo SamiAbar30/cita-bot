@@ -1,6 +1,7 @@
 const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const assert = require('assert');
+const nodemailer = require('nodemailer');
 
 describe('cita 3', function () {
   this.timeout(30000);
@@ -60,8 +61,12 @@ describe('cita 3', function () {
     await dropdown2.findElement(By.xpath("//option[. = 'MARRUECOS']")).click();
 
     await driver.findElement(By.id("btnEnviar")).click();
+
+    
     await driver.findElement(By.id("btnSiguiente")).click();
     await driver.findElement(By.id("txtTelefonoCitado")).click();
+    // Send notification after passing this step
+    await sendNotification('Step passed: btnEnviar clicked');
     await driver.findElement(By.id("emailUNO")).sendKeys("samiabar30@gmail.com");
     await driver.findElement(By.id("emailDOS")).sendKeys("samiabar30@gmail.com");
     await driver.findElement(By.id("txtTelefonoCitado")).sendKeys("663094035");
@@ -78,3 +83,34 @@ describe('cita 3', function () {
     assert.strictEqual(await driver.switchTo().alert().getText(), "AVISO CITA PREVIA\n\nNo olvides introducir el dato: '\"Código\"'. ");
   });
 });
+
+// Function to send email notifications
+async function sendNotification(message) {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'alibad03697@gmail.com',
+      pass: 'oqqjhwzwvdvjrnio'
+    }
+  });
+
+  const mailOptions = {
+    from: 'alibad03697@gmail.com',
+    to: 'samiabar30@gmail.com',
+    subject: 'd5ol t9awed bzerba a si sami',
+    text: message
+  };
+  const mailOptions2 = {
+    from: 'alibad03697@gmail.com',
+    to: 'Leftahmohamedamine@gmail.com',
+    subject: 'd5ol t9awed bzerba a si amin',
+    text: message
+  };
+  try {
+    await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions2);
+    console.log('Email sent successfully');
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+}
