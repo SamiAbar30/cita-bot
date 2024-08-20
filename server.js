@@ -3,7 +3,7 @@ const { exec } = require('child_process');
 const schedule = require('node-schedule');
 const app = express();
 
-schedule.scheduleJob('*/1 * * * *', () => {
+schedule.scheduleJob('*/15 * * * *', () => {
   console.log('Running scheduled test...');
   try {
     exec('npx mocha cita3.spec.js', (error, stdout, stderr) => {
