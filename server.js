@@ -1,19 +1,29 @@
 const express = require('express');
-const { runBot } = require('./bot'); 
-
+const { exec } = require('child_process');
+const schedule = require('node-schedule');
 const app = express();
 
-app.get('/test', (req, res) => {
-  exec('npx mocha cita3.spec.js', (error, stdout, stderr) => {
-    if (error) {
-      res.send(`Error: ${stderr}`);
-    } else {
-      res.send(`Output: ${stdout}`);
-    }
-  });
+schedule.scheduleJob('*/1 * * * *', () => {
+  console.log('Running scheduled test...');
+  try {
+    exec('npx mocha cita3.spec.js', (error, stdout, stderr) => {
+      if (error) {
+        // res.send(`Error: ${stderr}`);
+        console.log('error', error);
+      } else if (stdout) {
+        // res.send(`stdout: ${stdout}`);
+        console.log('stdout', stdout);
+      } else {
+        // res.send(`Output: ${stderr}`);
+        console.log('stderr', stderr);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    
+  }
+  
 });
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
 });
