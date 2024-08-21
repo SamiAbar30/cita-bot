@@ -54,7 +54,7 @@ describe('cita 3', function () {
 
     await driver.findElement(By.id("btnAceptar")).click();
     await driver.findElement(By.id("btnEntrar")).click();
-    await driver.findElement(By.id("txtIdCitado")).sendKeys("Z1145513R");
+    await driver.findElement(By.id("txtIdCitado")).sendKeys("Z0215713R");
     await driver.findElement(By.id("txtDesCitado")).sendKeys("ROBILA BOOJI");
 
     const dropdown2 = await driver.findElement(By.id("txtPaisNac"));
