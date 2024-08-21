@@ -54,8 +54,8 @@ describe('cita 3', function () {
 
     await driver.findElement(By.id("btnAceptar")).click();
     await driver.findElement(By.id("btnEntrar")).click();
-    await driver.findElement(By.id("txtIdCitado")).sendKeys("Z2143113R");
-    await driver.findElement(By.id("txtDesCitado")).sendKeys("SAMI ABAR");
+    await driver.findElement(By.id("txtIdCitado")).sendKeys("Z1145513R");
+    await driver.findElement(By.id("txtDesCitado")).sendKeys("ROBILA BOOJI");
 
     const dropdown2 = await driver.findElement(By.id("txtPaisNac"));
     await dropdown2.findElement(By.xpath("//option[. = 'MARRUECOS']")).click();
@@ -68,8 +68,8 @@ describe('cita 3', function () {
     // Send notification after passing this step
     await sendNotification('Step passed: btnEnviar clicked');
     await driver.findElement(By.id("emailUNO")).sendKeys("samiabar30@gmail.com");
-    await driver.findElement(By.id("emailDOS")).sendKeys("samiabar30@gmail.com");
-    await driver.findElement(By.id("txtTelefonoCitado")).sendKeys("663094035");
+    await driver.findElement(By.id("emailDOS")).sendKeys("bila30@gmail.com");
+    await driver.findElement(By.id("txtTelefonoCitado")).sendKeys("667788996");
     await driver.findElement(By.id("btnSiguiente")).click();
     await driver.findElement(By.linkText("23")).click();
     await driver.findElement(By.id("captcha")).click();
