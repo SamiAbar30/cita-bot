@@ -1,7 +1,15 @@
+require('dotenv').config(); // Load environment variables from .env file
+
 const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const assert = require('assert');
 const nodemailer = require('nodemailer');
+const twilio = require('twilio');
+
+// Twilio configuration
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = new twilio(accountSid, authToken);
 
 describe('cita 3', function () {
   this.timeout(30000);
@@ -15,12 +23,16 @@ describe('cita 3', function () {
 
     driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
     vars = {};
+    // Clear cookies, session storage, and local storage before starting the test
     await driver.manage().deleteAllCookies();
+  
   });
 
   afterEach(async function () {
     if (driver) {
       await driver.manage().deleteAllCookies();
+      await driver.executeScript('window.sessionStorage.clear();');
+      await driver.executeScript('window.localStorage.clear();');
       await driver.quit();
     }
   });
@@ -61,13 +73,15 @@ describe('cita 3', function () {
     await dropdown2.findElement(By.xpath("//option[. = 'MARRUECOS']")).click();
 
     await driver.findElement(By.id("btnEnviar")).click();
-
-    
+    // Send WhatsApp message after passing this step
+    await sendWhatsAppMessage('Step passed: btnEnviar clicked');
     await driver.findElement(By.id("btnSiguiente")).click();
     await driver.findElement(By.id("txtTelefonoCitado")).click();
+
     // Send notification after passing this step
     await sendNotification('Step passed: btnEnviar clicked');
-    await driver.findElement(By.id("emailUNO")).sendKeys("samiabar30@gmail.com");
+
+    await driver.findElement(By.id("emailUNO")).sendKeys("bila30@gmail.com");
     await driver.findElement(By.id("emailDOS")).sendKeys("bila30@gmail.com");
     await driver.findElement(By.id("txtTelefonoCitado")).sendKeys("667788996");
     await driver.findElement(By.id("btnSiguiente")).click();
@@ -89,19 +103,19 @@ async function sendNotification(message) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'alibad03697@gmail.com',
-      pass: 'oqqjhwzwvdvjrnio'
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
     }
   });
 
   const mailOptions = {
-    from: 'alibad03697@gmail.com',
+    from: process.env.EMAIL_USER,
     to: 'samiabar30@gmail.com',
     subject: 'd5ol t9awed bzerba a si sami',
     text: message
   };
   const mailOptions2 = {
-    from: 'alibad03697@gmail.com',
+    from: process.env.EMAIL_USER,
     to: 'Leftahmohamedamine@gmail.com',
     subject: 'd5ol t9awed bzerba a si amin',
     text: message
@@ -112,5 +126,19 @@ async function sendNotification(message) {
     console.log('Email sent successfully');
   } catch (error) {
     console.error('Error sending email:', error);
+  }
+}
+
+// Function to send WhatsApp message
+async function sendWhatsAppMessage(message) {
+  try {
+    const response = await client.messages.create({
+      body: message,
+      from: `${process.env.TWILIO_PHONE_NUMBER}`, // Your Twilio WhatsApp number
+      to: `${process.env.RECEIVER_PHONE_NUMBER}` // Your phone number
+    });
+    console.log('WhatsApp message sent:', response.sid);
+  } catch (error) {
+    console.error('Error sending WhatsApp message:', error);
   }
 }
